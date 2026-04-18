@@ -122,6 +122,43 @@
     </style>
 </head>
 <body>
+    <div id="audio-container" style="display:none;">
+        <audio id="snd-welcome" src="welcome_bell.mp3"></audio>
+        <audio id="snd-air" src="ambience_air.mp3" loop></audio>
+        <audio id="snd-clock" src="clock_tick.mp3" loop></audio>
+        <audio id="snd-bgm" src="bgm_music.mp3" loop></audio>
+    </div>
+
+   <div id="overlay-starter" onclick="initSensory()" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; display:flex; justify-content:center; align-items:center; cursor:pointer; transition: opacity 1.5s ease;">
+    <div style="width: 80%; max-width: 400px; text-align: left; color:var(--gold); font-family:'Noto Serif TC', serif;">
+        
+        <p class="fade-in-text" style="font-size:1.1rem; letter-spacing:3px; margin: 0 0 15px 0; opacity:0; animation: poemFade 2s ease forwards 0.5s;">
+            記憶，或許會遺忘
+        </p>
+        
+        <p class="fade-in-text" style="font-size:1.1rem; letter-spacing:3px; margin: 0 0 50px 0; opacity:0; animation: poemFade 2s ease forwards 1.8s;">
+            但，不代表他們不曾存在。
+        </p>
+        
+        <p style="font-family:'Space Mono', monospace; font-size:9px; letter-spacing:2px; opacity:0; animation: poemFade 1.5s ease forwards 3s; border-left: 1px solid var(--gold); padding-left: 15px;">
+            [ 點擊以開啟記憶路徑 ]
+        </p>
+    </div>
+</div>
+
+<style>
+    /* 文字淡入動畫定義 */
+    @keyframes poemFade {
+        from { 
+            opacity: 0; 
+            transform: translateY(5px); /* 輕微向上漂浮感 */
+        }
+        to { 
+            opacity: 0.9; 
+            transform: translateY(0); 
+        }
+    }
+</style>
 
 <nav>
     <a href="https://9201227-hub.github.io/Belonging-or-a-Cage//" class="back-link">
@@ -201,6 +238,51 @@
 </footer>
 
 <script>
+    let initialized = false;
+
+    function initSensory() {
+        if (initialized) return;
+        
+        // 隱藏啟動封面
+        const overlay = document.getElementById('overlay-starter');
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 800);
+
+        // 取得聲音檔案
+        const welcome = document.getElementById('snd-welcome');
+        const air = document.getElementById('snd-air');
+        const clock = document.getElementById('snd-clock');
+        const bgm = document.getElementById('snd-bgm');
+
+        // 1. 播放鈴鐺 + 歡迎聲 (這是主角，音量最大)
+        welcome.volume = 0.8;
+        welcome.play();
+
+        // 2. 背景環境音與時鐘 (調至極低，營造氛圍)
+        air.volume = 0.15; 
+        clock.volume = 0.05; // ✨ 大師微調：時鐘聲變得非常幽微
+        air.play();
+        clock.play();
+
+        // 3. 歡迎聲快結束時，背景音樂淡淡地浮現
+        setTimeout(() => {
+            bgm.volume = 0;
+            bgm.play();
+            let vol = 0;
+            let fadeIn = setInterval(() => {
+                if (vol < 0.2) { // ✨ 大師微調：音樂最高只到 0.2，保持輕柔
+                    vol += 0.01;
+                    bgm.volume = vol;
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, 150); // 稍微放慢淡入速度，讓聽覺更舒適
+        }, 2500);
+
+        initialized = true;
+    }
+
+    // 商品點擊功能
     function selectItem(element) {
         document.querySelectorAll('.card, .bookmark-card').forEach(card => card.classList.remove('selected'));
         element.classList.add('selected');
