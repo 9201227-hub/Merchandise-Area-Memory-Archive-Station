@@ -24,6 +24,7 @@
             background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #080808 100%);
         }
 
+        /* 數位掃描線 */
         body::after {
             content: "";
             position: fixed;
@@ -35,7 +36,7 @@
             opacity: 0.4;
         }
 
-        /* 導覽列：左側返還設計 */
+        /* 導覽列 */
         nav {
             padding: 12px 15px;
             display: flex;
@@ -53,23 +54,11 @@
             display: flex;
             align-items: center;
             letter-spacing: 1px;
-            font-weight: 300;
         }
+        .back-link span { font-size: 18px; margin-right: 6px; }
+        .nav-title { flex: 1; text-align: right; font-family: 'Space Mono', monospace; font-size: 9px; opacity: 0.5; }
 
-        .back-link span {
-            font-size: 18px;
-            margin-right: 6px;
-        }
-
-        .nav-title {
-            flex: 1;
-            text-align: right;
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            opacity: 0.5;
-            letter-spacing: 1px;
-        }
-
+        /* 頁面標題 */
         header { text-align: center; padding: 50px 20px 30px; }
         header p { font-family: 'Space Mono', monospace; color: var(--gold); font-size: 10px; letter-spacing: 2px; }
         header h1 { font-size: 1.6rem; letter-spacing: 5px; color: #fff; margin: 10px 0; font-weight: 600; }
@@ -85,86 +74,91 @@
         }
         .section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); margin-left: 15px; }
 
-        /* 商品卡片 */
-        .card, .bookmark-card {
+        /* 通用卡片 */
+        .card {
             border: 1px solid var(--border);
             padding: 15px;
             background: rgba(255,255,255,0.01);
             transition: all 0.5s ease;
             cursor: pointer;
             margin: 0 20px 25px;
+            position: relative;
+        }
+        .img-box { 
+            width: 100%; aspect-ratio: 1/1; 
+            overflow: hidden; border: 1px solid var(--border); 
+            background: #000; margin-bottom: 15px; position: relative;
+        }
+        .img-box img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            filter: grayscale(1) brightness(0.6); transition: all 0.8s ease; 
         }
 
-        .img-box { width: 100%; aspect-ratio: 1/1; overflow: hidden; border: 1px solid var(--border); background: #000; margin-bottom: 15px; }
-        
-        /* 書籤長型容器 5x15 比例 */
-        .bookmark-img-box { width: 100%; aspect-ratio: 1 / 1.5; overflow: hidden; border: 1px solid var(--border); background: #000; margin-bottom: 15px; }
+        .card.selected { border-color: var(--gold); background: rgba(197, 160, 89, 0.08); box-shadow: 0 0 20px rgba(197, 160, 89, 0.2); }
+        .card.selected .img-box img { filter: grayscale(0) brightness(1); }
 
-        img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(0.6); transition: all 0.8s ease; }
-
-        .selected { border-color: var(--gold) !important; background: rgba(197, 160, 89, 0.08) !important; box-shadow: 0 0 20px rgba(197, 160, 89, 0.2); }
-        .selected img { filter: grayscale(0) brightness(1) !important; transform: scale(1.08); }
-
-        .info { margin-top: 5px; }
+        .title { font-size: 1.1rem; color: #fff; margin: 5px 0 10px; font-weight: 600; }
         .tag { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--gold); }
-        .title { font-size: 1.2rem; color: #fff; margin: 5px 0 10px; font-weight: 600; }
-        
-        .price-row { display: flex; flex-direction: column; border-top: 1px dashed var(--border); padding-top: 15px; }
-        .price-main { font-family: 'Space Mono', monospace; color: #fff; font-size: 1.2rem; }
-        .price-bundle { font-size: 0.85rem; color: var(--gold); margin-top: 6px; font-weight: 600; }
+        .price-row { display: flex; flex-direction: column; border-top: 1px dashed var(--border); padding-top: 15px; font-family: 'Space Mono', monospace; }
+        .price-main { font-size: 1.1rem; color: #fff; }
+        .price-bundle { font-size: 0.75rem; color: var(--gold); margin-top: 4px; }
 
-        footer { text-align: center; padding: 60px 20px; font-family: 'Space Mono', monospace; font-size: 9px; opacity: 0.3; line-height: 2; }
+        /* ✨ 書籤輪播專屬 */
+        .bookmark-slideshow img { position: absolute; top: 0; left: 0; opacity: 0; transform: scale(0.95); }
+        .bookmark-slideshow img.active { opacity: 1; transform: scale(1); }
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6); color: var(--gold);
+            border: 1px solid var(--gold); padding: 8px 12px;
+            cursor: pointer; opacity: 0; transition: 0.3s; z-index: 10;
+        }
+        .card.selected .nav-btn { opacity: 0.8; }
+        .nav-btn:hover { background: var(--gold); color: #000; }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+
+        /* 詩意開場白 */
+        #overlay-starter {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: opacity 1.5s ease;
+        }
+        @keyframes poemFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 0.9; transform: translateY(0); }
+        }
+
+        footer { text-align: center; padding: 60px 20px; font-family: 'Space Mono', monospace; font-size: 9px; opacity: 0.3; }
 
         @media (min-width: 768px) {
-            .grid-layout { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-            .special-layout { display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+            .grid-layout { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 1100px; margin: 0 auto; }
+            .span-2 { grid-column: span 2; }
         }
     </style>
 </head>
 <body>
-    <div id="audio-container" style="display:none;">
-        <audio id="snd-welcome" src="welcome_bell.mp3"></audio>
-        <audio id="snd-air" src="ambience_air.mp3" loop></audio>
-        <audio id="snd-clock" src="clock_tick.mp3" loop></audio>
-        <audio id="snd-bgm" src="bgm_music.mp3" loop></audio>
-    </div>
 
-   <div id="overlay-starter" onclick="initSensory()" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; display:flex; justify-content:center; align-items:center; cursor:pointer; transition: opacity 1.5s ease;">
-    <div style="width: 80%; max-width: 400px; text-align: left; color:var(--gold); font-family:'Noto Serif TC', serif;">
-        
-        <p class="fade-in-text" style="font-size:1.1rem; letter-spacing:3px; margin: 0 0 15px 0; opacity:0; animation: poemFade 2s ease forwards 0.5s;">
-            記憶，或許會遺忘
-        </p>
-        
-        <p class="fade-in-text" style="font-size:1.1rem; letter-spacing:3px; margin: 0 0 50px 0; opacity:0; animation: poemFade 2s ease forwards 1.8s;">
-            但，不代表他們不曾存在。
-        </p>
-        
-        <p style="font-family:'Space Mono', monospace; font-size:9px; letter-spacing:2px; opacity:0; animation: poemFade 1.5s ease forwards 3s; border-left: 1px solid var(--gold); padding-left: 15px;">
-            [ 點擊以開啟記憶路徑 ]
-        </p>
+<div id="overlay-starter" onclick="initSensory()">
+    <div style="width: 80%; max-width: 400px; text-align: left; color:var(--gold);">
+        <p style="font-size:1.1rem; letter-spacing:3px; margin-bottom:15px; opacity:0; animation: poemFade 2s forwards 0.5s;">記憶，或許會遺忘</p>
+        <p style="font-size:1.1rem; letter-spacing:3px; margin-bottom:50px; opacity:0; animation: poemFade 2s forwards 1.8s;">但，不代表他們不曾存在。</p>
+        <p style="font-family:'Space Mono', monospace; font-size:9px; letter-spacing:2px; opacity:0; animation: poemFade 1.5s forwards 3s; border-left: 1px solid var(--gold); padding-left: 15px;">[ 點擊以開啟記憶路徑 ]</p>
     </div>
 </div>
 
-<style>
-    /* 文字淡入動畫定義 */
-    @keyframes poemFade {
-        from { 
-            opacity: 0; 
-            transform: translateY(5px); /* 輕微向上漂浮感 */
-        }
-        to { 
-            opacity: 0.9; 
-            transform: translateY(0); 
-        }
-    }
-</style>
+<div style="display:none;">
+    <audio id="snd-welcome" src="welcome_bell.mp3"></audio>
+    <audio id="snd-air" src="ambience_air.mp3" loop></audio>
+    <audio id="snd-clock" src="clock_tick.mp3" loop></audio>
+    <audio id="snd-bgm" src="bgm_music.mp3" loop></audio>
+</div>
 
 <nav>
     <a href="https://9201227-hub.github.io/Belonging-or-a-Cage//" class="back-link">
         <span>←</span> 認識，從頭開始 —
     </a>
-    <div class="nav-title">MEM_PROTOCOL // 0418</div>
+    <div class="nav-title">MEM_PROTOCOL // 2026</div>
 </nav>
 
 <header>
@@ -181,7 +175,7 @@
             <h3 class="title">CD吊飾：裂縫</h3>
             <div class="price-row">
                 <span class="price-main">NT$ 120</span>
-                <span class="price-bundle">三款合購 NT$ 300</span>
+                <span class="price-bundle">三款合購組合價 NT$ 300</span>
             </div>
         </div>
     </div>
@@ -192,7 +186,7 @@
             <h3 class="title">CD吊飾：天堂</h3>
             <div class="price-row">
                 <span class="price-main">NT$ 120</span>
-                <span class="price-bundle">三款合購 NT$ 300</span>
+                <span class="price-bundle">三款合購組合價 NT$ 300</span>
             </div>
         </div>
     </div>
@@ -203,22 +197,32 @@
             <h3 class="title">CD吊飾：療癒</h3>
             <div class="price-row">
                 <span class="price-main">NT$ 120</span>
-                <span class="price-bundle">三款合購 NT$ 300</span>
+                <span class="price-bundle">三款合購組合價 NT$ 300</span>
             </div>
         </div>
     </div>
 </div>
 
-<div class="section-title">02 COLLECTIBLES</div>
-<div class="special-layout">
-    <div class="bookmark-card" onclick="selectItem(this)">
+<div class="section-title">02 COLLECTIBLES // BOOKMARK_ARCHIVE</div>
+<div class="grid-layout">
+    <div class="card span-2" id="bookmark-master" onclick="activateArchive(this)">
         <span class="tag">#004_BOOKMARK // 50x150mm</span>
-        <div class="bookmark-img-box"><img src="bookmark.png"></div>
+        <div class="img-box bookmark-slideshow">
+            <img src="bookmark1.png" class="active">
+            <img src="bookmark2.png">
+            <img src="bookmark3.png">
+            <button class="nav-btn prev" onclick="changeSlide(-1, event)">〈</button>
+            <button class="nav-btn next" onclick="changeSlide(1, event)">〉</button>
+        </div>
         <div class="info">
-            <h3 class="title">書籤盲袋 (全 9 款)</h3>
-            <div class="price-row"><span class="price-main">NT$ 60 / 抽</span></div>
+            <h3 class="title">書籤盲袋：記憶碎片 (全 9 款)</h3>
+            <p style="font-size: 0.85rem; opacity: 0.7;">內含【花語】、【本質】與【職責】三系列。</p>
+            <div class="price-row" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                <span class="price-main">NT$ 60 / 抽</span>
+            </div>
         </div>
     </div>
+
     <div class="card" onclick="selectItem(this)">
         <span class="tag">#005_BADGES</span>
         <div class="img-box"><img src="badge.png"></div>
@@ -226,68 +230,60 @@
             <h3 class="title">徽章盲袋 (全 9 款)</h3>
             <div class="price-row">
                 <span class="price-main">NT$ 50 / 抽</span>
-                <span class="price-bundle">買二送一優惠中</span>
+                <span class="price-bundle">買二送一特惠中</span>
             </div>
         </div>
     </div>
 </div>
 
-<footer>
-    &copy; 2026 BELONGING OR A CAGE.<br>
-    MEMORY_COLLECTION_COMPLETE.
-</footer>
+<footer>&copy; 2026 BELONGING OR A CAGE.<br>MEMORY_COLLECTION_COMPLETE.</footer>
 
 <script>
     let initialized = false;
+    let currentSlide = 0;
 
     function initSensory() {
         if (initialized) return;
-        
-        // 隱藏啟動封面
-        const overlay = document.getElementById('overlay-starter');
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 800);
+        document.getElementById('overlay-starter').style.opacity = '0';
+        setTimeout(() => { document.getElementById('overlay-starter').style.display = 'none'; }, 1500);
 
-        // 取得聲音檔案
         const welcome = document.getElementById('snd-welcome');
         const air = document.getElementById('snd-air');
         const clock = document.getElementById('snd-clock');
         const bgm = document.getElementById('snd-bgm');
 
-        // 1. 播放鈴鐺 + 歡迎聲 (這是主角，音量最大)
-        welcome.volume = 0.8;
-        welcome.play();
+        welcome.volume = 0.8; welcome.play();
+        air.volume = 0.15; air.play();
+        clock.volume = 0.05; clock.play();
 
-        // 2. 背景環境音與時鐘 (調至極低，營造氛圍)
-        air.volume = 0.15; 
-        clock.volume = 0.05; // ✨ 大師微調：時鐘聲變得非常幽微
-        air.play();
-        clock.play();
-
-        // 3. 歡迎聲快結束時，背景音樂淡淡地浮現
         setTimeout(() => {
-            bgm.volume = 0;
-            bgm.play();
+            bgm.volume = 0; bgm.play();
             let vol = 0;
             let fadeIn = setInterval(() => {
-                if (vol < 0.2) { // ✨ 大師微調：音樂最高只到 0.2，保持輕柔
-                    vol += 0.01;
-                    bgm.volume = vol;
-                } else {
-                    clearInterval(fadeIn);
-                }
-            }, 150); // 稍微放慢淡入速度，讓聽覺更舒適
+                if (vol < 0.2) { vol += 0.01; bgm.volume = vol; }
+                else clearInterval(fadeIn);
+            }, 150);
         }, 2500);
-
         initialized = true;
     }
 
-    // 商品點擊功能
     function selectItem(element) {
-        document.querySelectorAll('.card, .bookmark-card').forEach(card => card.classList.remove('selected'));
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
         element.classList.add('selected');
     }
-</script>
 
+    function activateArchive(element) {
+        if (element.classList.contains('selected')) return;
+        selectItem(element);
+    }
+
+    function changeSlide(n, event) {
+        event.stopPropagation();
+        const slides = document.querySelectorAll('#bookmark-master img');
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + n + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+</script>
 </body>
 </html>
